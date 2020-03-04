@@ -1,6 +1,6 @@
 from Crypto.Cipher import DES
 from Crypto import Random
-from Crypto.Util.Padding import pad
+from Crypto.Util.Padding import pad, unpad
 import sys
 
 iv = bytes.fromhex(sys.argv[1])
@@ -11,18 +11,31 @@ outputfiledir = sys.argv[4]
 print(iv, type(iv), len(iv))
 print(key, type(key), len(key))
 
-des = DES.new(key, DES.MODE_CBC, iv)
+print('='*100)
+print('Key used: ', [x for x in key])
+print("IV used: ",[x for x in iv])
+print('='*100)
+
+des1 = DES.new(key, DES.MODE_CBC, iv)
+des2 = DES.new(key, DES.MODE_CBC, iv)
 
 with open(inputfiledir, 'r') as infile:
     plain_text = infile.read()
-    cipher_text = des.encrypt(pad(plain_text, DES.block_size))
+    cipher_text = des1.encrypt(pad(plain_text.encode('utf-8'), DES.block_size))
 
     with open(outputfiledir, 'wb') as outfile:
         outfile.write(cipher_text)
         outfile.close()
 
-    print(plain_text)
-    print(cipher_text)
+    with open(outputfiledir, 'rb') as infile:
+        cipher_text_file = infile.read()
+
+
+    print('Plaintext is:', plain_text)
+    print('Ciphertext is:', cipher_text)
+    msg = unpad(des2.decrypt(cipher_text_file), DES.block_size)
+    print('Original Message:', msg.decode('utf-8'))
+    print('='*100)
 
 
 # print '='*100                    
