@@ -19,23 +19,23 @@ print('='*100)
 des1 = DES.new(key, DES.MODE_CBC, iv)
 des2 = DES.new(key, DES.MODE_CBC, iv)
 
-with open(inputfiledir, 'r') as infile:
+with open(inputfiledir, 'rb') as infile:
     plain_text = infile.read()
-    cipher_text = des1.encrypt(pad(plain_text.encode('utf-8'), DES.block_size))
+    cipher_text = des1.encrypt(pad(plain_text, DES.block_size))
 
-    with open(outputfiledir, 'wb') as outfile:
-        outfile.write(cipher_text)
-        outfile.close()
+with open(outputfiledir, 'wb') as outfile:
+    outfile.write(cipher_text)
+    outfile.close()
 
-    with open(outputfiledir, 'rb') as infile:
-        cipher_text_file = infile.read()
+with open('test3.des', 'rb') as infile:
+    cipher_text_file = infile.read()
+print(bytearray(des2.decrypt(cipher_text_file)))
 
-
-    print('Plaintext is:', plain_text)
-    print('Ciphertext is:', cipher_text)
-    msg = unpad(des2.decrypt(cipher_text_file), DES.block_size)
-    print('Original Message:', msg.decode('utf-8'))
-    print('='*100)
+print('Plaintext is:', plain_text)
+print('Ciphertext is:', cipher_text)
+msg = unpad(des2.decrypt(cipher_text_file), DES.block_size)
+print('Original Message:', msg.decode('utf-8'))
+print('='*100)
 
 
 # print '='*100                    

