@@ -108,7 +108,7 @@ Q14
 3. Capture the IVs (using airodump-ng)
 4. Perform fake authentication on the target AP using aireplay-ng
 5. Listen for ARP requests and reinject them back into the network
-6.  After capturing a bunch of IVs, run aircrack-ng to obtain the password. If we have enough IVs, the key correct will be displayed in hex.
+6. After capturing a bunch of IVs, run aircrack-ng to obtain the password. If we have enough IVs, the key correct will be displayed in hex.
 
 
 Q15
