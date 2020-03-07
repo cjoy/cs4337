@@ -6,9 +6,6 @@ key = bytes.fromhex(sys.argv[2])
 inputfiledir = sys.argv[3]
 outputfiledir = sys.argv[4]
 
-print(iv, type(iv), len(iv))
-print(key, type(key), len(key))
-
 print('='*100)
 print('Key used: ', [x for x in key])
 print("IV used: ",[x for x in iv])
