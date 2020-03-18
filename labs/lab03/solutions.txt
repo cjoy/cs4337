@@ -1,26 +1,77 @@
+ASSESSMENT 1
+Q1. In this attack, you're essentially intercepting traffic by acting as a middle man between the client and the internet. The client connects to an access point. Then you proxy their traffic to the intended destination (ie. the internet). This way, the attacker, sitting between the client and their intended network and is able to monitor the client's traffic. 
 
-1. Setting up the AP
+Q2. 
+A: Enable the kernel option for IP forwarding
+B: Redirect http traffic to the port 8080
+C: Redirect https traffic to the port 8080
+
+Q3. First we use the following command to redirect the http traffic:			
+$ sysctl -w net.ipv4.ip_forward=1				
+$ iptables -t nat -A PREROUTING -i wlan0 -p tcp - -dport 80 -j REDIRECT --to-port 8080 
+
+Because “testyou” website uses HTTP protocol, which means it's not encrypted. We used mitmproxy to accept a HTTP connection, acting like a middle man. To the client, it looks like the mitmproxy server was simply relaying its connection to the server, it looks like the mitmproxy server is the client. 
+
+Q4. Because in HTTPs protocol, clients and servers exchange certificates which are issued and verified by a trusted third party called a certificate authority, the reason why we see "Your connection is not private" or "Cannot provide a secure connection" is because we didn't have any certificate. We could install mitmproxy's certificate to resolve this issue.
+
+Q5. C
+
+Q6. 
+We were seeing HTTP request method types in the console. The client (ie. the machine we were spying on), had been sending GET and POST requests to the desired server, in which we were able to capture. When trying to log in, the client sends a POST request with the username and password in the request body, which we were able to intercept. We were even able to see the response send back from the server to the client via the mitmproxy console.
+
+Q7.
+Replaying a packet means the attacker captures traffic, and stores or manipulates it before sending it on, when and can send on their way to the intended destination.
+
+Intercepting a packet means the attacker makes the user think they are connected to a legitimate server, Then the attacker can try to add new messages and pass them on.
+
+Q8.
+One approach would be to intercept the traffic going from my iPhone to Apple's servers (via a MITM attack) and manipulating the response corresponding to the high score leaderboard rankings (it's probably some GET request). In that response, I would change my score to the highest score. This way, when we go to the leaderboard rank within the app, it'd show my score as the highest score. However, if my friend checks the score on their mobile, unless they're connected to the compromised access point, they would get the actual leaderboard rankings, rendering our attempts to fudge the score, useless. In this case, we can perform a de-authentication attack and force our friend to connect to the compromised access point. 
+
+
+ASSESSMENT 2
+
+Q1. 
+
+Step 1. Setting up the AP
 $ nmtui
 Edit a connection
  -> Select Hotspot
  -> Change SSID to "Starbucks"
  -> Change password to nothing
 
-2. Forcing the decive to disconnect via a deauthentication attack
+Step 2. Forcing the decive to disconnect via a deauthentication attack
 $ iwconfig
 $ airmon-ng start wlan0
 $ airdump-ng wlan0mon
 $ airodump-ng wlan0mon --bssid [routers BSSID here]--channel [routers channel here]
 $ aireplay-ng --deauth 0 -c [DEVICES MAC ADDRESS] -a [ROUTERS MAC ADDRESS] wlan0mon
 
-3. Proxying requests through
+Step 3. Proxying requests through
 $ sysctl -w net.ipv4.ip_forward=1
 $ iptables -t nat -A PREROUTING -i wlan0-p tcp --dport 80 -j REDIRECT --to-port 8080
 $ iptables -t nat -A PREROUTING -i wlan0-p tcp --dport 443 -j REDIRECT --to-port 8080
 
-4. Ensure the client is connected to the Fake AP
+Step 4. Ensure the client is connected to the Fake AP
 $ airdump-ng wlan0mon
 Check if a new client is appear in the list of connected hosts.
 
-5. Monitoring requests
+Step 5. Monitoring requests
 $ mitmproxy -T --host
+
+Q2. 
+Step 1. Ask the staff the official name of the hotspots.
+Step 2. If the hotspots you try to access has a key, try to authenticate using the wrong key. If the connection accepted, it means there may be an Evil Twin attack.
+
+Step 1. Ask the staff the official name of the hotspots.
+Step 2. If the hotspots you try to access has a key, try to authenticate using the wrong key. If the connection accepted, it means there may be an Evil Twin attack.
+
+Another solution:
+Ask the owner to power off the AP for a while and check if there's an AP with the same SSID broadcasting. If there is an AP with the same SSID broadcasting while the original AP is off, then there probably is a fake AP active. 
+
+Q3. 
+Fluxion is a tool that combines social engineering and technology to trick users into giving up their log-in and password information. Fluxion released 4 years ago. It's best to use this attack when protocol use 4-way handshake to authenticate devices to the wireless network.
+
+Q4. 
+DNS spoofing is an attack used to comprise the integrity of a Domain Name Server data returned, thus returning name records that have been tampered with. You can use this attack to direct traffic intended for one website and redirect to another website that looks exactly the same but is used to capture your login credentials etc.
+
+You can use the Evil Twin attack to spoof the local DNS used in the access point. The local DNS resolution an integral part of DNS resolution process as it's essentially the first step in resolving a domain name's level 1 TLD (eg. .com., .org. etc). If the computer's local DNS is not used (due to invalid cache), the spoofed DNS will be used, thus allowing for an attack.
