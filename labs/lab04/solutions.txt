@@ -1,0 +1,155 @@
+# Lab assessment 1
+## Q1
+DNS Response: w0rld.secilmisler.com: type A, class IN, addr 84.244.1.30
+
+We see that the domain name is w0rld.secilmisler.com and the IP address is 84.244.1.30
+
+
+## Q2
+After performing a whois lookup on 84.244.1.30, we get the following address:
+Irkutsk, P.O.Box 267, 664033, Russia
+
+This IP address originated from Russia
+
+## Q3
+The local host, on port 1101, is connecting to a destination on port 5050.
+
+1101 -> 5050
+
+## Q4
+After doing research, we see that Mirai Botnet uses this port. By observing the TCP Stream below, we see that the bot is communicating with its CandC (Command and Control) server.
+
+TCP Stream:
+NICK [P00|GBR|64180]
+USER XP-2015 * 0 :ZOMBIE1
+:CandC.local 001 [P00|GBR|64180] :Welcome to the CandC server [P00|GBR|64180]!XP-2015@192.168.1.1
+:CandC.local 002 [P00|GBR|64180] :Your host is CandC.local
+:CandC.local 003 [P00|GBR|64180] :This server was created May 6, 2006
+:CandC.local 004 [P00|GBR|64180] CandC.local CandC script
+:CandC.local 005 [P00|GBR|64180] CMDS=KNOCK,MAP,DCCALLOW,USERIP SAFELIST HCN MAXCHANNELS=10 CHANLIMIT=#:10 MAXLIST=b:60,e:60,I:60 NICKLEN=30 CHANNELLEN=32 TOPICLEN=307 KICKLEN=307 AWAYLEN=307 MAXTARGETS=20 WALLCHOPS :are supported by this server
+:CandC.local 005 [P00|GBR|64180] WATCH=128 SILENCE=15 MODES=12 CHANTYPES=# PREFIX=(qaohv)~&@%+ CHANMODES=beI,kfL,lj,psmntirRcOAQKVGCuzNSMTG NETWORK=home CASEMAPPING=ascii EXTBAN=~,cqnr ELIST=MNUCT STATUSMSG=~&@%+ EXCEPTS INVEX :are supported by this server
+:CandC.local 251 [P00|GBR|64180] :There are 1 users and 2 invisible on 1 servers
+:CandC.local 252 [P00|GBR|64180] 1 :operator(s) online
+:CandC.local 254 [P00|GBR|64180] 1 :channels formed
+:CandC.local 255 [P00|GBR|64180] :I have 2 clients and 0 servers
+:CandC.local 265 [P00|GBR|64180] :Current Local Users: 2 Max: 2
+:CandC.local 266 [P00|GBR|64180] :Current Global Users: 2 Max: 2
+:CandC.local 422 [P00|GBR|64180] :MOTD File is missing
+:[P00|GBR|64180] MODE [P00|GBR|64180] :+iw
+MODE [P00|GBR|64180] +B
+JOIN #reptile
+:[P00|GBR|64180]!XP-2015@192.168.1.1 JOIN :#reptile
+:CandC.local 332 [P00|GBR|64180] #reptile :.version
+:CandC.local 333 [P00|GBR|64180] #reptile commander 1160011515
+:CandC.local 353 [P00|GBR|64180] = #reptile :[P00|GBR|64180] @commander
+:CandC.local 366 [P00|GBR|64180] #reptile :End of /NAMES list.
+MODE [P00|GBR|64180] +B
+:commander!commander@admin.local PRIVMSG [P00|GBR|64180] :.VERSION.
+JOIN #reptile
+MODE [P00|GBR|64180] +B
+JOIN #reptile
+PRIVMSG #reptile :MAIN// Reptile (0.37)
+:commander!commander@admin.local TOPIC #reptile :.id
+NOTICE commander :.VERSION mIRC v6.14 Khaled Mardam-Bey.
+:commander!commander@admin.local TOPIC #reptile :.v
+PRIVMSG #reptile# :.WARN.// Version request from: commander!commander@admin.local
+PRIVMSG #reptile :MAIN// Reptile (0.37)
+
+ 
+
+## Q5
+We're doing a lookup for the following domain:
+www.kinchan.net
+
+## Q6
+We're getting the cgi script: proxy.cgi
+
+Full path: http://www.kinchan.net/cgi-bin/proxy.cgi
+
+## Q7
+After searching for the script above in sophos, we see that it's a Win32 work called W32/Titlebot-FV. It's essentially a Trojan that allows for remote code execution using IRC channels. This malware tries to terminate security processes that include the Windows Firewall and other essential security update services.
+
+More details: https://www.sophos.com/en-us/threat-center/threat-analyses/viruses-and-spyware/W32~Tilebot-FV/detailed-analysis.aspx
+
+## Q8
+After doing research in W32/Titlebot-FV, we found out that it's essentially a Trojan that allows for remote code execution using IRC channels. We know that it tries to disrupt essential security processes. 
+
+As a security manager, what we can do is monitor the traffic that's being sent to and from IRC channels. At first, we just observe (using wireshark) so we can see what sort of commands are being executed on the system. 
+
+After observing, we can terminate all the processes using port 1101 (or anything that's sending data to port 5050 on a remote server). We can do this by using Microsoft's Network Monitor tool, that allows us to monitor processes and associate communications to outbound ports to their relevant PIDs. After that, we just send a sigterm (signal terminate) command to those PIDs. This is so we can prevent any further communication from the slave systems to the Control and Command server.
+
+# Lab assessment 2
+## Q1
+FrameNo.  | Source | Num SSL Records | SSL Record Types
+106 | Client (128.238.38.162) | 1 | Client Hello
+108 | Server (216.75.194.220) | 1 | Server Hello
+111 | Server (216.75.194.220) | 2 | Certificate, Server Hello Done
+112 | Client (128.238.38.162) | 3 | Client Key Exchange, Change Cipher Spec, Encrypted Handshake Message
+113 | Server (216.75.194.220) | 2 | Change Cipher Spec, Encrypted Handshake Message
+114 |  Client (128.238.38.162) | 1 | Application Data
+22 | Server (216.75.194.220) | 1 | Application Data
+149 | Server (216.75.194.220) | 1 | Application Data
+
+## Q2
+See timing diagram
+
+## Q3
+Yes, it contains a nonce. The nonce's hex dump is the following: 66 df 78 4c 04 8c d6 04 35 dc 44 89 00 80 89 46 99 09
+
+## Q4
+public-key algorithm: RSA 
+symmetric‐key algorithm: RC4
+Hash algorithm: MD5
+
+More detail - Cipher Specs (17 specs):
+Cipher Spec: TLS_RSA_WITH_RC4_128_MD5 (0x000004)
+Cipher Spec: TLS_RSA_WITH_RC4_128_SHA (0x000005)
+Cipher Spec: TLS_RSA_WITH_3DES_EDE_CBC_SHA (0x00000a)
+Cipher Spec: SSL2_RC4_128_WITH_MD5 (0x010080)
+Cipher Spec: SSL2_DES_192_EDE3_CBC_WITH_MD5 (0x0700c0)
+Cipher Spec: SSL2_RC2_128_CBC_WITH_MD5 (0x030080)
+Cipher Spec: TLS_RSA_WITH_DES_CBC_SHA (0x000009)
+Cipher Spec: SSL2_DES_64_CBC_WITH_MD5 (0x060040)
+Cipher Spec: TLS_RSA_EXPORT1024_WITH_RC4_56_SHA (0x000064)
+Cipher Spec: TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA (0x000062)
+Cipher Spec: TLS_RSA_EXPORT_WITH_RC4_40_MD5 (0x000003)
+Cipher Spec: TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5 (0x000006)
+Cipher Spec: SSL2_RC4_128_EXPORT40_WITH_MD5 (0x020080)
+Cipher Spec: SSL2_RC2_128_CBC_EXPORT40_WITH_MD5 (0x040080)
+Cipher Spec: TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA (0x000013)
+Cipher Spec: TLS_DHE_DSS_WITH_DES_CBC_SHA (0x000012)
+Cipher Spec: TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA (0x000063)
+
+## Q5
+Cipher Suite: TLS_RSA_WITH_RC4_128_MD5
+
+
+## Q6
+Yes, contains a 32bit nonce that's used to prevent replay attacks etc.
+
+## Q7
+Yes, it contains a session ID, which can be later used to resume the ssl session, using this ID. 
+
+Session ID: 1bad05faba02ea92c64c54be4547c32f3e3ca63d3a0c86ddad694b45682da22f
+
+
+## Q8
+The certificate is in another separate record. The certificate can be fit into a single Ethernet frame.
+
+## Q9
+Yes, the record contains a pre-master secret. This secret is used to generate the master secret that in-turn is used to generate the session's key. The secret is encrypted, using a public key, resulting in an encrypted secret that's 120 bytes long.
+
+Encrypted PreMaster: bc49494729aa2590477fd059056ae78956c77b12af08b47c609e61f104b0fbf83e41c08dc910939cad1ece82e0dde250b99b4b51c73fbdeecd92c4275dffddfb95423da4b771eec0ffc3ceb2ed60906cd7046e5a00982e52eeb5bcd1c4f563f0e34429f1c6ba645879469e3ec4fdd79b7a02040932f61d7aa12dcfd21a186429
+
+
+## Q10
+The Change Cipher Spec record is 6 bytes long and is used to notify the receiver that each subsequent record is encrypted.
+
+## Q11
+The handshakes are encrypted, which contain the mac addresses and is 56 bytes long. The encryption is applied to mac addresses that are appended one after another.
+
+## Q12
+Yes, the server sends a change cipher record and encrypted handshake record. The server sends back a "finish" message once the secure symmetric encryption has been established.
+
+## Q13
+Once the shared key has been established, we use symmetric encryption to encrypt the application data, which is then transmitted (free of worry from MiTM attacks). The records do contain MAC, however, we're not able to use Wireshark to distinguish between the encrypted data and the MAC.
